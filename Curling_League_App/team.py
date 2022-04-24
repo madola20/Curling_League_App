@@ -45,7 +45,7 @@ class Team(IdentifiedObject):
     def member_named(self, s):
      for teammate in self._members:
         theName = teammate.name
-        if s is theName:
+        if s == theName:
             return teammate
 
     def remove_member(self, member):
@@ -61,15 +61,14 @@ class Team(IdentifiedObject):
     def __str__(self):
         return str(self.name + ": " + str(len(self._members)))
 
-"""
+
 if __name__ == '__main__':
     
     t = Team(1, "Flintstones")
     t.add_member(TeamMember(2, "Fred", "fred@bedrock"))
     t.add_member(TeamMember(3, "Barney", "barney@bedrock"))
     t.add_member(TeamMember(6, "Bread", "wiMa@bedrock"))
-    t.add_member(TeamMember(4, "Wilma", "wima@bedrock"))
+    t.add_member(TeamMember(4, "Wilma", "jhgjma@bedrock"))
     print(t.member_named("Barney"))
     print(t.members[1])
     print(t)
-    """

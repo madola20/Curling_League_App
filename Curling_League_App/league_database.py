@@ -5,6 +5,9 @@ import pickle
 from Curling_League_App.league import League
 from Curling_League_App.team import Team
 from Curling_League_App.team_member import TeamMember
+from Curling_League_App.competition import Competition
+
+from io import BytesIO
 
 class LeagueDatabase:
     _sole_instance = None
@@ -16,8 +19,11 @@ class LeagueDatabase:
     def load(cls, file_name):
             try:
                 with open(file_name, mode="rb") as file:
+
+
                         return pickle.load(file)
                         cls._sole_instance = file.read()
+
             except FileNotFoundError:
                 print("ugh, sorry, it would be better to use the logging framework here but I don't want to go into it")
                 backup = file_name + ".backup"
@@ -37,10 +43,7 @@ class LeagueDatabase:
             cls._sole_instance = cls()
         return cls._sole_instance
 
-    """
-    Read only property
-    returns: list of leagues being managed
-    """
+
     def leagues(self):
         return self.the_leagues
 
@@ -53,7 +56,7 @@ class LeagueDatabase:
         try:
             self.the_leagues.remove(league)
         except:
-            pass
+            print("nothing happened")
 
 
     def next_oid(self):
@@ -68,7 +71,7 @@ class LeagueDatabase:
                 pickle.dump(LeagueDatabase.instance(), file)
         else:
             with open(file_name, mode="wb") as file:
-                pickle.dump(LeagueDatabase.instance(), file)
+                pickle.dump(LeagueDatabase(), file)
 
     def import_league_teams(self, league, file_name):
         with open(file_name, newline='', encoding="utf-8") as csvfile:
@@ -111,6 +114,80 @@ class LeagueDatabase:
                         write_file.writerow([team_name,getattr(member, "name"),getattr(member, "email")])
             except: print("There was an error")
         csvfile.close()
+
+    #def __str__(self):
+        #return f"{}"
+
+if __name__ == '__main__':
+    #"""
+    league = League(1, "Some league")
+    t1 = Team(1, "t1")
+    t2 = Team(2, "t2")
+    t3 = Team(3, "t3")
+
+    league.add_team(t1)
+    league.add_team(t2)
+    league.add_team(t3)
+
+    d = Team(4, "t4")
+    league.add_team(d)
+
+    c1 = Competition(1, [t1, t2], "here", None)
+    league.add_competition(c1)
+
+    c2 = Competition(2, [t2, t3], "here", None)
+    league.add_competition(c2)
+
+    c3 = Competition(3, [t1, t3], "here", None)
+    league.add_competition(c3)
+
+    league2 = League(1, "Some league")
+    p1 = Team(1, "p1")
+    p2 = Team(2, "p2")
+    p3 = Team(3, "p3")
+
+    league2.add_team(p1)
+    league2.add_team(p2)
+    league2.add_team(p3)
+
+    d = Team(4, "p4")
+    league2.add_team(d)
+
+    c1 = Competition(1, [p1, p2], "here", None)
+    league2.add_competition(c1)
+
+    c2 = Competition(2, [p2, p3], "here", None)
+    league2.add_competition(c2)
+
+    c3 = Competition(3, [p1, p3], "here", None)
+    league2.add_competition(c3)
+
+
+
+    #byte_file = LeagueDatabase.load("this_is_database_test")
+
+    #print(byte_file)
+    #print(thisn)
+    #thisn.add_league(league)
+    #thisn.add_league(league2)
+    #print(byte_file.leagues())
+    #byte_file.add_league(League(54, "Bullshit"))
+    #print(byte_file.leagues())
+    #thisn.save("this_is_database_test")
+
+    #byte_file = thisn.load("this_is_database_test")
+    #print(thisn.leagues())
+
+
+    thisn = LeagueDatabase()
+    thisn.add_league(league)
+    thisn.add_league(league2)
+    thisn.save("this_is_database_test")
+    print(thisn.leagues())
+    #"""
+    byte_file = LeagueDatabase.load("this_is_database_test")
+    print(byte_file.leagues())
+
 
 
 
