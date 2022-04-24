@@ -33,6 +33,8 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         self.remove_button.clicked.connect(self.removeLeague)
         self.edit_button.clicked.connect(self.editLeague)
 
+        self.theDatabase = LeagueDatabase()
+
     def browseFile(self):
         """
         fname=QFileDialog.getOpenFileName(self, "Open File")
@@ -48,7 +50,7 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         print(str(ba))
         for item in ba:
             #self.league_list_widget.addItem(str(item))
-            self.leagues.append(str(item))
+            self.leagues.append(item)
         self.update_ui()
 
         f.close()
@@ -78,6 +80,7 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         #result = add_item.exec()
         if add_item[1]:
             new_league = League(LeagueDatabase._last_oid, add_item[0])
+            self.theDatabase.next_oid()
             self.leagues.append(new_league)
             self.update_ui()
             print(LeagueDatabase.the_leagues)
