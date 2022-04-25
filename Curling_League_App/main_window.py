@@ -7,6 +7,7 @@ import os.path
 from os import path
 import csv
 import pickle
+import functools
 
 from Curling_League_App.competition import Competition
 from Curling_League_App.identified_object import IdentifiedObject
@@ -65,8 +66,10 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
     def saveFile(self):
         fname = QFileDialog.getSaveFileName(self, 'Save File')
         f = open(fname[0], mode="wb")
+        #for item in self.leagues:
+            #pickle.dump(item, f, pickle.HIGHEST_PROTOCOL)
 
-        pickle.dump([self.leagues], f)
+        pickle.dump(self.leagues, f)
         f.close()
 
 
@@ -107,11 +110,15 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         row = self.league_list_widget.currentRow()
         selected_league = self.leagues[row]
         dialog = EditDialog(selected_league)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
 
-            self.update_ui()
+        dialog.accepted.connect(functools.partial(self.edit_dialog_accepted, dialog, selected_league))
+        dialog.show()
+        #if dialog.exec() == QDialog.DialogCode.Accepted:
+        self.update_ui()
 
-
+    def edit_dialog_accepted(self, source, selected_league):
+        source.update_league(selected_league)
+        self.update_ui()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
