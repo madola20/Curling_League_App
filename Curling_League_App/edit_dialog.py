@@ -1,6 +1,8 @@
 from PyQt5 import uic, QtWidgets
 import sys
 
+from PyQt5.QtWidgets import QMessageBox
+
 from Curling_League_App.competition import Competition
 from Curling_League_App.identified_object import IdentifiedObject
 from Curling_League_App.league_database import LeagueDatabase
@@ -9,6 +11,9 @@ from Curling_League_App.team_member import TeamMember
 from Curling_League_App.exceptions.duplicate_oid import DuplicateOid
 from Curling_League_App.exceptions.duplicate_email import DuplicateEmail
 from Curling_League_App.league import League
+
+import functools
+from Curling_League_App.edit_member_dialog import EditMemberDialog
 
 
 
@@ -28,6 +33,8 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
         #######################
         self.league = selected_league
         self.add_team_button.clicked.connect(self.addTeam)
+        self.delete_team_button.clicked.connect(self.removeTeam)
+        self.edit_team_button.clicked.connect(self.editTeam)
         if selected_league:
             #self.teams = selected_league.teams
             self.league_teams_list_widget.clear()
@@ -56,6 +63,44 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
 
         else:
             print("canceled")
+
+    def removeTeam(self):
+        dialog = QMessageBox()
+        dialog.setIcon(QMessageBox.Icon.Question)
+        dialog.setWindowTitle("Remove Team")
+        dialog.setText("Are you sure you want to delete this team from the league?")
+        no = dialog.addButton("No", QMessageBox.ButtonRole.RejectRole)
+        yes = dialog.addButton("Yes", QMessageBox.ButtonRole.AcceptRole)
+
+        dialog.exec()
+        if dialog.clickedButton() == yes:
+            del self.teams[self.league_teams_list_widget.currentRow()]
+            self.update_league()
+        else:
+            print("No")
+
+
+
+
+
+
+    def editTeam(self):
+        row = self.league_teams_list_widget.currentRow()
+        selected_team = self.teams[row]
+        dialog = EditMemberDialog(selected_team)
+
+        dialog.accepted.connect(functools.partial(self.edit_team_dialog_accepted, dialog, selected_team))
+        dialog.show()
+        #if dialog.exec() == QDialog.DialogCode.Accepted:
+        self.update_league()
+
+    def edit_team_dialog_accepted(self, source, selected_league):
+        source.update_league(selected_league)
+        self.update_league()
+
+
+
+
 
     def update_league(self):
         self.league_teams_list_widget.clear()
