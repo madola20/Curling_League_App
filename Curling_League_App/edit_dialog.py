@@ -49,7 +49,7 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
         if add_new_team[1]:
             while (self.flag):
                 new_team = Team(self.edit_dialog_oid, add_new_team[0])
-                #self.thisDatabse.next_oid()
+
                 try:
                     self.league.add_team(new_team)
                     self.flag = False
@@ -94,8 +94,8 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
         #if dialog.exec() == QDialog.DialogCode.Accepted:
         self.update_league()
 
-    def edit_team_dialog_accepted(self, source, selected_league):
-        source.update_league(selected_league)
+    def edit_team_dialog_accepted(self, source, selected_team):
+        source.update_league(selected_team)
         self.update_league()
 
 
