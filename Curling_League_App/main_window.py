@@ -37,21 +37,13 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         self.theDatabase = LeagueDatabase()
 
     def browseFile(self):
-        """
-        fname=QFileDialog.getOpenFileName(self, "Open File")
-        file = open(fname[0], 'rb')
-        for row in file:
-            self.leagues.append(row)
-            #self.league_list_widget.addItem(row)
-        self.update_ui()
-        """
+
         fname = QFileDialog.getOpenFileName(self, "Open File")
         if fname[0] != "":
             f = open(fname[0], mode="rb")
             ba = pickle.load(f)
             print(str(ba))
             for item in ba:
-                #self.league_list_widget.addItem(str(item))
                 self.leagues.append(item)
             self.update_ui()
 
@@ -64,8 +56,6 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         fname = QFileDialog.getSaveFileName(self, 'Save File')
         if fname[0] != "":
             f = open(fname[0], mode="wb")
-            #for item in self.leagues:
-                #pickle.dump(item, f, pickle.HIGHEST_PROTOCOL)
 
             pickle.dump(self.leagues, f)
             f.close()
@@ -87,7 +77,6 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
             self.leagues.append(new_league)
             self.update_ui()
             print(LeagueDatabase.the_leagues)
-            #self.league_list_widget.addItem(add_item[0])
         else:
             print("canceled")
 
