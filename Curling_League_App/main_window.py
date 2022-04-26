@@ -46,31 +46,31 @@ class MainWindow(QtBaseWindow, Ui_MainWindow):
         self.update_ui()
         """
         fname = QFileDialog.getOpenFileName(self, "Open File")
-        f = open(fname[0], mode="rb")
-        ba = pickle.load(f)
-        print(str(ba))
-        for item in ba:
-            #self.league_list_widget.addItem(str(item))
-            self.leagues.append(item)
-        self.update_ui()
+        if fname[0] != "":
+            f = open(fname[0], mode="rb")
+            ba = pickle.load(f)
+            print(str(ba))
+            for item in ba:
+                #self.league_list_widget.addItem(str(item))
+                self.leagues.append(item)
+            self.update_ui()
 
-        f.close()
+            f.close()
+        else:
+            pass
 
-        #league_database.load(fname[0])
-        #with open(fname, newline='', encoding="utf-8") as csvfile:
-            #read_file = csv.reader(csvfile, quoting=csv.QUOTE_NONE)
-            #next(read_file)
-            #for row in read_file:
-                #self.league_list_widget.addItem(row)
 
     def saveFile(self):
         fname = QFileDialog.getSaveFileName(self, 'Save File')
-        f = open(fname[0], mode="wb")
-        #for item in self.leagues:
-            #pickle.dump(item, f, pickle.HIGHEST_PROTOCOL)
+        if fname[0] != "":
+            f = open(fname[0], mode="wb")
+            #for item in self.leagues:
+                #pickle.dump(item, f, pickle.HIGHEST_PROTOCOL)
 
-        pickle.dump(self.leagues, f)
-        f.close()
+            pickle.dump(self.leagues, f)
+            f.close()
+        else:
+            pass
 
 
     def update_ui(self):

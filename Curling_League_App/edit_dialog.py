@@ -1,7 +1,7 @@
 from PyQt5 import uic, QtWidgets
 import sys
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from Curling_League_App.competition import Competition
 from Curling_League_App.identified_object import IdentifiedObject
@@ -35,6 +35,8 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
         self.add_team_button.clicked.connect(self.addTeam)
         self.delete_team_button.clicked.connect(self.removeTeam)
         self.edit_team_button.clicked.connect(self.editTeam)
+        self.export_button.clicked.connect(self.exportTeam)
+        self.import_button.clicked.connect(self.importTeam)
         if selected_league:
             #self.teams = selected_league.teams
             self.league_teams_list_widget.clear()
@@ -100,17 +102,34 @@ class EditDialog(QtBaseWindow, Ui_MainWindow):
 
 
 
-
-
     def update_league(self):
         self.league_teams_list_widget.clear()
         for item in self.teams:
             self.league_teams_list_widget.addItem(str(item))
 
     def oid_fixer(self):
-
         self.edit_dialog_oid += 1
         return self.edit_dialog_oid
+
+
+
+    def importTeam(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open File')
+        if fname[0] != "":
+            thisn = LeagueDatabase()
+            thisn.import_league_teams(self.league, fname[0])
+            self.update_league()
+        else:
+            pass
+
+    def exportTeam(self):
+        fname = QFileDialog.getSaveFileName(self, 'Save File')
+        if fname[0] != "":
+            thisn = LeagueDatabase()
+            thisn.export_league_teams(self.league, fname[0])
+            self.update_league()
+        else:
+            pass
 
 
 if __name__ == '__main__':
